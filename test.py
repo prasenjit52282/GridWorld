@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from src import GridWorld
+from gridworld import GridWorld
 
 import numpy as np
 
