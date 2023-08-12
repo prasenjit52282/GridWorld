@@ -5,7 +5,7 @@
 
 # Installation
 To install the package in your python(>=3.9) environment you need to run the below commands:
-```
+```bash
 git clone https://github.com/prasenjit52282/GridWorld.git
 cd GridWorld
 python setup.py install
