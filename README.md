@@ -53,7 +53,7 @@ world=\
     wwwwwwwwwwwwwwwww
     """
     
-env=GridWorld(world,slip=0.2)
+env=GridWorld(world,slip=0.2) # Slip is the degree of stochasticity of the gridworld.
 
 # Policy Iteratioin
 V=np.zeros((env.state_count,1))
@@ -68,7 +68,7 @@ while np.abs(V-V_prev).sum()>eps:
     pi=np.argmax(Q_sa,axis=1)
 
 print("Pi:",pi)
-env.show(pi)  # Show the policy in graphical window
+env.show(pi)  # Show the policy in graphical window and we can control the agent using the arrow-keys
 ```
 The policy is shown below:
 ```
@@ -79,4 +79,58 @@ Pi: [0 0 0 0 1 1 2 2 0 0 0 0 0 3 0 0 0 0 1 1 0 0 0 0 0 3 1 1 2 2 3 3 0 0 0 0 0
 ```
 <img src="./assets/solved.png" width="60%"/>
 
+# Model-Free
+See how we define the custom-grid world "a" being agents location, "g" being the goal, and "w" being walls to obstruct the agent. For a model-free setup we can interact with the environment with a openai-gym like interface and observe the <S,A,R,S'> tuples as shown below.
+```python
+import time
+import numpy as np
+from gridworld import GridWorld
 
+world=\
+    """
+    wwwwwwwwwwwwwwwww
+    wa       w     gw
+    w      www      w
+    wwwww    www  www
+    w      www      w
+    wwwww    www  www
+    w     ww        w
+    wwwwwwwwwwwwwwwww
+    """
+    
+env=GridWorld(world,slip=0.2,max_episode_step=1000) # Beyond max_episode_step interaction, agent get a timelimit error
+
+for i in range(100):
+    curr_state=env.reset()
+    done=False
+    while not done:
+        env.render() # [Optional] only if you want to monitor the progress
+        action=env.random_action() # Select by the agent's policy
+        next_state,reward,done,info=env.step(action) # Openai-gym like interface
+        print(f"<S,A,R,S'>=<{curr_state},{action},{reward},{next_state}>")
+        curr_state=next_state
+        time.sleep(0.1) # Just to see the actions
+env.close() # Must close when rendering is enabled
+```
+State Transitions are printed:
+```
+<S,A,R,S'>=<0,1,-1,14>
+<S,A,R,S'>=<14,1,-1,15>
+<S,A,R,S'>=<15,1,-1,14>
+<S,A,R,S'>=<14,1,-1,14>
+<S,A,R,S'>=<14,0,-1,15>
+<S,A,R,S'>=<15,1,-1,15>
+<S,A,R,S'>=<15,3,-1,1>
+<S,A,R,S'>=<1,3,-1,1>
+<S,A,R,S'>=<1,3,-1,1>
+<S,A,R,S'>=<1,1,-1,15>
+<S,A,R,S'>=<15,3,-1,1>
+<S,A,R,S'>=<1,3,-1,1>
+<S,A,R,S'>=<1,3,-1,1>
+ ....
+# Each state is uniquely identified by state ID (e.g., o, 1, 2, ...)
+```
+<img src="./assets/modelFree.gif" width="60%"/>
+
+# Contact Me
+I hope this tool is useful in your RL-journey. For questions and general feedback, contact [Prasenjit Karmakar](https://www.linkedin.com/in/prasenjit52282).

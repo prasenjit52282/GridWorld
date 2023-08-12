@@ -87,6 +87,7 @@ class GridWorld:
         if self.renderfirst:
             pg.init()
             self.screen = pg.display.set_mode((self.col*50,self.row*50))
+            self.renderfirst=False
         self.screen.fill(self.state_color)
         self.wall_group.draw(self.screen)  
         self.goal.draw(self.screen)    
