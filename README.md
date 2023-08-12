@@ -35,7 +35,8 @@ If you want to have your own agent and goal along with differnt objects to repre
 - setup.py
 - test.py
 ```
-# Model-based Policy Iteration
+# Model-based
+See how we define the custom-grid world "a" being agents location, "g" being the goal, and "w" being walls to obstruct the agent. For a model-based setup we can access the transition and reward dynamics "P_sas" and "R_sa" as shown below.
 ```python
 import numpy as np
 from gridworld import GridWorld
@@ -54,6 +55,7 @@ world=\
     
 env=GridWorld(world,slip=0.2)
 
+# Policy Iteratioin
 V=np.zeros((env.state_count,1))
 V_prev=np.random.random((env.state_count,1))
 eps=1e-7
@@ -66,7 +68,7 @@ while np.abs(V-V_prev).sum()>eps:
     pi=np.argmax(Q_sa,axis=1)
 
 print("Pi:",pi)
-env.show(pi)
+env.show(pi)  # Show the policy in graphical window
 ```
 The policy is shown below:
 ```
@@ -75,4 +77,6 @@ Pi: [0 0 0 0 1 1 2 2 0 0 0 0 0 3 0 0 0 0 1 1 0 0 0 0 0 3 1 1 2 2 3 3 0 0 0 0 0
 
 # where mapping is {0:'right',1:'down',2:'left',3:'up'}
 ```
-<img src="./assets/solved.png" width="50%"/>
+<img src="./assets/solved.png" width="60%"/>
+
+
