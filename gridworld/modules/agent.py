@@ -1,9 +1,11 @@
 import pygame as pg
+import pkg_resources
 
 class Agent(pg.sprite.Sprite):
     def __init__(self,col,row):
         super().__init__()
-        self.image=pg.transform.scale(pg.image.load('./images/agent.png'),(50,50))
+        fpath=pkg_resources.resource_filename(__name__,'images/agent.png')
+        self.image=pg.transform.scale(pg.image.load(fpath),(50,50))
         self.rect=self.image.get_rect()
         self.initial_position=pg.Vector2(col,row)
         
