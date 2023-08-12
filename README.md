@@ -11,30 +11,6 @@ cd GridWorld
 python setup.py install
 ```
 
-# File Structure
-If you want to have your own agent and goal along with differnt objects to represent the wall and normal states, you can change the respective images in "/gridworld/modules/images"
-```
-- gridworld
-    └── modules
-        └── images
-            └── agent.png
-            └── goal.png
-            └── wall.png
-            └── {direction}.png
-        └── __init__.py
-        └── agent.py
-        └── goal.py
-        └── state.py
-        └── wall.py
-    └── __init__.py
-    └── gridworld.py
-- requirements.txt
-- .gitignore
-- LICENSE
-- MANIFEST.in
-- setup.py
-- test.py
-```
 # Model-based
 See how we define the custom-grid world "a" being agents location, "g" being the goal, and "w" being walls to obstruct the agent. For a model-based setup we can access the transition and reward dynamics "P_sas" and "R_sa" as shown below.
 ```python
@@ -131,6 +107,31 @@ State Transitions are printed:
 # Each state is uniquely identified by state ID (e.g., o, 1, 2, ...)
 ```
 <img src="./assets/modelFree.gif" width="60%"/>
+
+# File Structure
+If you want to have your own agent and goal along with differnt objects to represent the wall and normal states, you can change the respective images in "/gridworld/modules/images"
+```
+- gridworld
+    └── modules
+        └── images
+            └── agent.png
+            └── goal.png
+            └── wall.png
+            └── {direction}.png
+        └── __init__.py
+        └── agent.py
+        └── goal.py
+        └── state.py
+        └── wall.py
+    └── __init__.py
+    └── gridworld.py
+- requirements.txt
+- .gitignore
+- LICENSE
+- MANIFEST.in
+- setup.py
+- test.py
+```
 
 # Contact Me
 I hope this tool is useful in your RL-journey. For questions and general feedback, contact [Prasenjit Karmakar](https://www.linkedin.com/in/prasenjit52282).
