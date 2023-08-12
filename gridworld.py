@@ -53,6 +53,7 @@ class GridWorld:
         self.state_dict=dict(self.state_dict)
         self.state_count=len(self.state_dict)
         self.P_sas, self.R_sa=self.build_Model(self.slip)
+        self.reset()
 
 
     def random_action(self):
