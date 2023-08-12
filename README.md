@@ -76,7 +76,7 @@ world=\
     
 env=GridWorld(world,slip=0.2,max_episode_step=1000) # Beyond max_episode_step interaction, agent get a timelimit error
 
-for i in range(100):
+for i in range(100): # Number of episodes
     curr_state=env.reset()
     done=False
     while not done:
