@@ -1,4 +1,5 @@
 import pygame as pg
+import pkg_resources
 
 class State(pg.sprite.Sprite):
     def __init__(self,col,row):
@@ -15,4 +16,5 @@ class State(pg.sprite.Sprite):
     def change_with_policy(self,state_dict,policy): #policy={0:'up',1:'down'} etc
         state=state_dict[(self.pos.x,self.pos.y)]['state']
         optimal_action=policy[state]
-        self.image=pg.transform.scale(pg.image.load('./images/'+optimal_action+'.png'),(20,20))
+        fpath=pkg_resources.resource_filename(__name__,'images/'+optimal_action+'.png')
+        self.image=pg.transform.scale(pg.image.load(fpath),(20,20))

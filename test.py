@@ -24,5 +24,3 @@ policy=np.random.choice(w.action_space,size=w.state_count)
 w.setPolicy(policy)
 
 w.play_as_human(True)
-
-

@@ -1,9 +1,11 @@
 import pygame as pg
+import pkg_resources
 
 class Goal(pg.sprite.Sprite):
     def __init__(self,col,row):
         super().__init__()
-        self.image=pg.transform.scale(pg.image.load('./images/goal.png'),(50,50))
+        fpath=pkg_resources.resource_filename(__name__,'images/goal.png')
+        self.image=pg.transform.scale(pg.image.load(fpath),(50,50))
         self.rect=self.image.get_rect()
         self.pos=pg.Vector2(col,row)
         self.set_pixcel_position()

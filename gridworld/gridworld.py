@@ -1,10 +1,7 @@
-import pygame as pg
-from modules.agent import Agent
-from modules.wall import Wall
-from modules.goal import Goal
-from modules.state import State
-from collections import defaultdict
 import numpy as np
+import pygame as pg
+from collections import defaultdict
+from .modules import Agent, Wall, Goal, State
 
 class GridWorld:
     def __init__(self,world,slip=0.2,max_episode_step=1000):
