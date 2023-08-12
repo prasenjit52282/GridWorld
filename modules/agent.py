@@ -34,6 +34,10 @@ class Agent(pg.sprite.Sprite):
     def reInitilizeAgent(self):
         self.pos=pg.Vector2(self.initial_position.x,self.initial_position.y)
         self.set_pixcel_position()
+
+    def setLoc(self,col,row):
+        self.pos=pg.Vector2(col,row)
+        self.set_pixcel_position()
         
     def draw(self, screen):
        screen.blit(self.image, (self.rect.x, self.rect.y))
