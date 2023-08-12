@@ -5,16 +5,16 @@ import numpy as np
 
 world=\
     """
-    wwwwwwwwwwwwwwwwwww
-    wa         w      w
-    w          w      w
-    wwwww      wwwwwwww
-    w          wg     w
-    wwwwwww    www  www
-    w                 w
-    w        wwwwwwwwww
-    w                 w
-    wwwwwwwwwwwwwwwwwww
+    wwwwwwwwwwwwwwwww
+    wa       w      w
+    w        w      w
+    wwwww    wwwwwwww
+    w        wg     w
+    wwwww    www  www
+    w               w
+    w      wwwwwwwwww
+    w               w
+    wwwwwwwwwwwwwwwww
     """
     
 w=GridWorld(world)
@@ -23,4 +23,4 @@ policy=np.random.choice(w.action_space,size=w.state_count)
 
 w.setPolicy(policy)
 
-w.play_as_human(True)
+w.play_as_human(False)
