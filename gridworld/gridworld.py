@@ -1,7 +1,7 @@
 import numpy as np
 import pygame as pg
 from collections import defaultdict
-from .modules import Agent, Wall, Goal, State
+from .modules import Agent, Wall, Goal, State, Hole
 
 class GridWorld:
     def __init__(self,world,slip=0.2,max_episode_step=1000):
@@ -40,6 +40,11 @@ class GridWorld:
                 elif block_type=='g':
                     self.goal=Goal(col=x,row=y)
                     self.state_dict[(x,y)]={'state':i,'reward':10,'done':True}
+                    i+=1
+
+                elif block_type=='o':
+                    self.state_group.add(Hole(col=x,row=y))
+                    self.state_dict[(x,y)]={'state':i,'reward':-10,'done':True}
                     i+=1
                 
                 elif block_type==' ':
@@ -127,7 +132,7 @@ class GridWorld:
                         elif event.key == pg.K_UP:
                             response=self.agent.move('up',self.wall_group,self.state_dict)
                         elif event.key == pg.K_DOWN:
-                            response=self.agent.move('down',self.wall_group,self.state_dict)                         
+                            response=self.agent.move('down',self.wall_group,self.state_dict)
                 
             screen.fill(self.state_color)
               

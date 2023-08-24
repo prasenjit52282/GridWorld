@@ -18,7 +18,9 @@ class Agent(pg.sprite.Sprite):
     
     def move(self,direction,walls,state_dict):
         pastpos=pg.Vector2(self.pos.x,self.pos.y)
-        if direction=='down':
+        if hasattr(state_dict[(pastpos.x,pastpos.y)],"isHole"):
+            self.pos=pg.Vector2(pastpos.x,pastpos.y)
+        elif direction=='down':
             self.pos+=pg.Vector2(0,1)
         elif direction=='up':
             self.pos+=pg.Vector2(0,-1)
@@ -31,7 +33,9 @@ class Agent(pg.sprite.Sprite):
                 self.pos=pg.Vector2(pastpos.x,pastpos.y)
                 break
         self.set_pixcel_position()
-        return state_dict[(self.pos.x,self.pos.y)]
+        next_state=state_dict[(self.pos.x,self.pos.y)]
+        print(next_state)
+        return next_state
     
     def reInitilizeAgent(self):
         self.pos=pg.Vector2(self.initial_position.x,self.initial_position.y)
