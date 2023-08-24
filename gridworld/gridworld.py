@@ -4,13 +4,14 @@ from collections import defaultdict
 from .modules import Agent, Wall, Goal, State, Hole
 
 class GridWorld:
-    def __init__(self,world,slip=0.2,max_episode_step=1000):
+    def __init__(self,world,slip=0.2,log=False,max_episode_step=1000):
         
         self.world=world.split('\n    ')[1:-1]
         self.action_map={0:'right',1:'down',2:'left',3:'up'}
         self.action_space=[0,1,2,3]
         self.action_size=len(self.action_space)
         self.slip=slip
+        self.logging=log
        
         self.col=len(self.world[0])
         self.row=len(self.world)
@@ -32,7 +33,7 @@ class GridWorld:
                     self.wall_group.add(Wall(col=x,row=y))
                     
                 elif block_type=='a':
-                    self.agent=Agent(col=x,row=y)
+                    self.agent=Agent(col=x,row=y,log=self.logging)
                     self.state_group.add(State(col=x,row=y))
                     self.state_dict[(x,y)]={'state':i,'reward':-1,'done':False}
                     i+=1

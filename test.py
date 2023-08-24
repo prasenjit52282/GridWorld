@@ -17,7 +17,7 @@ world=\
     wwwwwwwwwwwwwwwww
     """
     
-w=GridWorld(world)
+w=GridWorld(world,log=True)
 
 policy=np.random.choice(w.action_space,size=w.state_count)
 

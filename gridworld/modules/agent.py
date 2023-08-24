@@ -2,8 +2,9 @@ import pygame as pg
 import pkg_resources
 
 class Agent(pg.sprite.Sprite):
-    def __init__(self,col,row):
+    def __init__(self,col,row,log):
         super().__init__()
+        self.log=log
         fpath=pkg_resources.resource_filename(__name__,'images/agent.png')
         self.image=pg.transform.scale(pg.image.load(fpath),(50,50))
         self.rect=self.image.get_rect()
@@ -34,7 +35,7 @@ class Agent(pg.sprite.Sprite):
                 break
         self.set_pixcel_position()
         next_state=state_dict[(self.pos.x,self.pos.y)]
-        print(next_state)
+        if self.log:print(next_state)
         return next_state
     
     def reInitilizeAgent(self):
