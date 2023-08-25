@@ -20,3 +20,6 @@ class Hole(pg.sprite.Sprite):
 
     def change_with_policy(self,state_dict,policy): #policy={0:'up',1:'down'} etc
         pass
+    
+    def default_state(self):
+        pass

@@ -12,7 +12,7 @@ python setup.py install
 ```
 
 # Model-based
-See how we define the custom-grid world "a" being agents location, "g" being the goal, and "w" being walls to obstruct the agent. For a model-based setup we can access the transition and reward dynamics "P_sas" and "R_sa" as shown below.
+See how we define the custom-grid world "a" being agents location, "g" being the goal, "o" being holes, and "w" being walls to obstruct the agent. For a model-based setup we can access the transition and reward dynamics "P_sas" and "R_sa" as shown below.
 ```python
 import numpy as np
 from gridworld import GridWorld
@@ -20,11 +20,11 @@ from gridworld import GridWorld
 world=\
     """
     wwwwwwwwwwwwwwwww
-    wa       w     gw
-    w      www      w
-    wwwww    www  www
-    w      www      w
-    wwwww    www  www
+    wa   o   w     gw
+    w               w
+    www  o   www  www
+    w               w
+    wwwww    o    www
     w     ww        w
     wwwwwwwwwwwwwwwww
     """
@@ -48,15 +48,17 @@ env.show(pi)  # Show the policy in graphical window and we can control the agent
 ```
 The policy is shown below:
 ```
-Pi: [0 0 0 0 1 1 2 2 0 0 0 0 0 3 0 0 0 0 1 1 0 0 0 0 0 3 1 1 2 2 3 3 0 0 0 0 0
- 1 0 0 3 3 2 2 0 0 0 1 3 3 0 0 0 0 3 0 0 0 0 3 3 2 2]
+Pi: [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0,
+     3, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 3, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3,
+     0, 0, 0, 0, 3, 3, 2, 2]
 
 # where mapping is {0:'right',1:'down',2:'left',3:'up'}
 ```
 <img src="./assets/solved.png" width="60%"/>
 
 # Model-Free
-See how we define the custom-grid world "a" being agents location, "g" being the goal, and "w" being walls to obstruct the agent. For a model-free setup we can interact with the environment with a openai-gym like interface and observe the <S,A,R,S'> tuples as shown below.
+See how we define the custom-grid world "a" being agents location, "g" being the goal, "o" being holes, and "w" being walls to obstruct the agent. For a model-free setup we can interact with the environment with a openai-gym like interface and observe the <S,A,R,S'> tuples as shown below.
 ```python
 import time
 import numpy as np

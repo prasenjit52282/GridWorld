@@ -34,7 +34,7 @@ class GridWorld:
                     
                 elif block_type=='a':
                     self.agent=Agent(col=x,row=y,log=self.logging)
-                    self.state_group.add(State(col=x,row=y))
+                    self.state_group.add(State(col=x,row=y,color=self.state_color))
                     self.state_dict[(x,y)]={'state':i,'reward':-1,'done':False}
                     i+=1
                     
@@ -49,7 +49,7 @@ class GridWorld:
                     i+=1
                 
                 elif block_type==' ':
-                    self.state_group.add(State(col=x,row=y))
+                    self.state_group.add(State(col=x,row=y,color=self.state_color))
                     self.state_dict[(x,y)]={'state':i,'reward':-1,'done':False}
                     i+=1
                     
@@ -95,7 +95,8 @@ class GridWorld:
             self.screen = pg.display.set_mode((self.col*50,self.row*50))
             self.renderfirst=False
         self.screen.fill(self.state_color)
-        self.wall_group.draw(self.screen)  
+        self.wall_group.draw(self.screen) 
+        self.state_group.draw(self.screen)
         self.goal.draw(self.screen)    
         self.agent.draw(self.screen)
         pg.display.update()
@@ -107,16 +108,23 @@ class GridWorld:
         pg.quit()
         
         
-    def setPolicy(self,policy):
+    def __setPolicy(self,policy):
         for i,act in enumerate(policy):
             self.policy[i]=self.action_map[act]
         for s in self.state_group:
             s.change_with_policy(self.state_dict,self.policy)
+    
+    def __unsetPolicy(self):
+        self.policy={}
+        for s in self.state_group:
+            s.default_state()
         
-        
-    def play_as_human(self,show_policy=False):
-        if show_policy and len(self.policy)==0:
-            raise Exception("Sorry, no policy found setPolicy first...use world.setPolicy([list of action for states])")
+    def play_as_human(self,policy=None):
+        show_policy=False
+        if policy is not None:
+            self.__setPolicy(policy)
+            show_policy=True
+
         pg.init()
         screen = pg.display.set_mode((self.col*50,self.row*50))
         clock = pg.time.Clock()
@@ -134,23 +142,23 @@ class GridWorld:
                             response=self.agent.move('up',self.wall_group,self.state_dict)
                         elif event.key == pg.K_DOWN:
                             response=self.agent.move('down',self.wall_group,self.state_dict)
-                
+
             screen.fill(self.state_color)
-              
+
             self.wall_group.draw(screen)  
-            if show_policy:self.state_group.draw(screen)
+            self.state_group.draw(screen)
             self.goal.draw(screen)    
             self.agent.draw(screen)
             
             pg.display.update()
             pg.display.flip()
-            clock.tick(60)  
+            clock.tick(60)
+        self.__unsetPolicy()
         pg.quit()
 
     
     def show(self,policy):
-        self.setPolicy(policy)
-        self.play_as_human(show_policy=True)
+        self.play_as_human(policy)
 
 
     def build_Model(self,slip):
