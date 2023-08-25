@@ -7,20 +7,18 @@ world=\
     """
     wwwwwwwwwwwwwwwww
     wa       w      w
-    w        w      w
+    w     o  w      w
     wwwww    wwwwwwww
-    w        wg     w
+    w    o   wg     w
     wwwww    www  www
-    w               w
-    w      wwwwwwwwww
-    w               w
+    w  o            w
+    w   o  wwwwwwwwww
+    w           o   w
     wwwwwwwwwwwwwwwww
     """
     
-w=GridWorld(world)
+w=GridWorld(world,log=True)
 
 policy=np.random.choice(w.action_space,size=w.state_count)
 
-w.setPolicy(policy)
-
-w.play_as_human(True)
+w.play_as_human(policy)
