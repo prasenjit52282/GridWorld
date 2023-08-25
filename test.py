@@ -6,13 +6,13 @@ import numpy as np
 world=\
     """
     wwwwwwwwwwwwwwwww
-    wa       w      w
-    w     o  w      w
-    wwwww    wwwwwwww
-    w    o   wg     w
-    wwwww    www  www
+    wa         o    w
+    w     o         w
+    www      wwwwwwww
+    w      o wg     w
+    wwwww    ww   www
     w  o            w
-    w   o  wwwwwwwwww
+    w        wwwwwwww
     w           o   w
     wwwwwwwwwwwwwwwww
     """
