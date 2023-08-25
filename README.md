@@ -55,7 +55,6 @@ Pi: [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0,
 
 # where mapping is {0:'right',1:'down',2:'left',3:'up'}
 ```
-<img src="./assets/solved.png" width="60%"/>
 
 # Model-Free
 See how we define the custom-grid world "a" being agents location, "g" being the goal, "o" being holes, and "w" being walls to obstruct the agent. For a model-free setup we can interact with the environment with a openai-gym like interface and observe the <S,A,R,S'> tuples as shown below.
