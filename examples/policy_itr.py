@@ -5,8 +5,6 @@ from helper import inf_norm,getMRP
 from PIL import Image
 
 np.random.seed(42)
-
-#MDP to MRP
 gamma=0.9
 
 #Policy Iteration
@@ -17,7 +15,7 @@ pi_prev=np.random.choice(env.action_space,size=env.state_count)
 i=0
 v_values=[]
 
-while np.sum(np.abs(pi-pi_prev))>0:
+while np.sum(np.abs(pi-pi_prev))>0: #until no policy change
     pi_prev=pi.copy()
     P_ss,R_s=getMRP(env,pi)
     V=R_s+gamma*np.matmul(P_ss,V)

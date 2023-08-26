@@ -31,7 +31,7 @@ world=\
     
 env=GridWorld(world,slip=0.2) # Slip is the degree of stochasticity of the gridworld.
 
-# Policy Iteratioin
+# Value Iteratioin
 V=np.zeros((env.state_count,1))
 V_prev=np.random.random((env.state_count,1))
 eps=1e-7
