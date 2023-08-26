@@ -120,10 +120,8 @@ class GridWorld:
             s.default_state()
         
     def play_as_human(self,policy=None):
-        show_policy=False
         if policy is not None:
             self.__setPolicy(policy)
-            show_policy=True
 
         pg.init()
         screen = pg.display.set_mode((self.col*50,self.row*50))
@@ -155,6 +153,25 @@ class GridWorld:
             clock.tick(60)
         self.__unsetPolicy()
         pg.quit()
+
+    def getScreenshot(self,policy=None):
+        if policy is not None:
+            self.__setPolicy(policy)
+        pg.init()
+        screen = pg.display.set_mode((self.col*50,self.row*50))
+        screen.fill(self.state_color)
+
+        self.wall_group.draw(screen)  
+        self.state_group.draw(screen)
+        self.goal.draw(screen)    
+        self.agent.draw(screen)
+        
+        pg.display.update()
+        pg.display.flip()
+        image=pg.surfarray.array3d(screen).transpose(1,0,2)
+        self.__unsetPolicy()
+        pg.quit()
+        return image
 
     
     def show(self,policy):
