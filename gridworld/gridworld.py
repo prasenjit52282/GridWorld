@@ -40,12 +40,12 @@ class GridWorld:
                     
                 elif block_type=='g':
                     self.goal=Goal(col=x,row=y)
-                    self.state_dict[(x,y)]={'state':i,'reward':10,'done':True}
+                    self.state_dict[(x,y)]={'state':i,'reward':100,'done':True}
                     i+=1
 
                 elif block_type=='o':
                     self.state_group.add(Hole(col=x,row=y))
-                    self.state_dict[(x,y)]={'state':i,'reward':-10,'done':True}
+                    self.state_dict[(x,y)]={'state':i,'reward':-100,'done':True,"hole":True}
                     i+=1
                 
                 elif block_type==' ':
@@ -83,7 +83,9 @@ class GridWorld:
         action=self.action_map[action]
         response=self.agent.move(action,self.wall_group,self.state_dict)
         self.episode_step+=1
-        if self.episode_step<=self._max_epi_step:
+        if "hole" in response:
+            return response['state'],response['reward'],response['done'],{"hole":True}
+        elif self.episode_step<=self._max_epi_step:
             return response['state'],response['reward'],response['done'],{}
         else:
             return response['state'],response['reward'],True,{'TimeLimit':True}
