@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 np.random.seed(42)
 
 Q_sa=np.zeros((env.state_count,env.action_size))
-N_sa=np.zeros((env.state_count,env.action_size))
 H_sa=np.ones((env.state_count,env.action_size))
 
 gamma=0.99
@@ -34,7 +33,6 @@ for episode in tqdm(range(episodes)):
         if (s,a) in seen:continue #first visit MC
         seen.append((s,a))
         
-        N_sa[s,a]+=1
         Q_sa[s,a]+=alpha*(G-Q_sa[s,a])
         H_sa[s,a]=(beta*H_sa[s,a]+(1-beta)*unsafe)
 
