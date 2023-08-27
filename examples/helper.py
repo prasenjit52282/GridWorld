@@ -55,3 +55,18 @@ def epsilon(curr_step,start=1,end=0.01,steady_step=300):
         return 1+((end-start)/steady_step)*curr_step
     else:
         return end
+
+def online_safe_eps_greedy(eps,Q_s,H_s,unsafe_prob,action_space):
+    mask_safe=H_s<=unsafe_prob
+    #mask qs which have risk >unsafe_prob
+    mask_all_unsafe=np.all(H_s>unsafe_prob,keepdims=True)
+    #when all actions has >unsafe_prob risk take all qs for pi
+    mask_eff=mask_safe+mask_all_unsafe
+    Q_eff=np.multiply(Q_s,mask_eff)
+    eff_greedy_action=np.argmax(Q_eff)
+    if np.random.random()<eps:
+        safe_actions=list(filter(lambda e:mask_eff[e],action_space))
+        action=np.random.choice(safe_actions)
+        return action
+    else:
+        return eff_greedy_action
