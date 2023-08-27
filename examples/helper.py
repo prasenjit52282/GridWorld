@@ -20,24 +20,35 @@ def sample_trajectory(env,pi,gamma=0.9):
         a=pi[s]
         s_,r,done,info=env.step(a)
         total_reward+=r
-        tau.append([s,a,r,0])
+        tau.append([s,a,r,0,0])
         s=s_
+    #return computation
     ret=0
     for idx in reversed(range(len(tau))):
         ret=tau[idx][2]+gamma*ret
         tau[idx][3]=ret
+    #unsafe tau marking
+    if "hole" in info: #hole state at end
+        for idx in (range(len(tau))):tau[idx][4]=1
     return tau,total_reward
 
-def eps_greedy_Q(eps,Q_sa,action_space):
-    eps_greedy_actions=[]
-    greedy_actions=np.argmax(Q_sa,axis=1)
-    for i in range(len(greedy_actions)):
+def eps_greedy_Qsafe(eps,Q_sa,H_sa,unsafe_prob,action_space):
+    eps_greedy_safe_actions=[]
+    mask_safe=H_sa<=unsafe_prob
+    #mask qs which have risk >unsafe_prob
+    mask_all_unsafe=np.all(H_sa>unsafe_prob,axis=1,keepdims=True)
+    #when all actions has >unsafe_prob risk take all qs for pi
+    mask_eff=mask_safe+mask_all_unsafe
+    Q_eff=np.multiply(Q_sa,mask_eff)
+    eff_greedy_actions=np.argmax(Q_eff,axis=1)
+    for i in range(len(eff_greedy_actions)):
         if np.random.random()<eps:
-            action=np.random.choice(action_space)
+            safe_actions=list(filter(lambda e:mask_eff[i,e],action_space))
+            action=np.random.choice(safe_actions)
         else:
-            action=greedy_actions[i]
-        eps_greedy_actions.append(action)
-    return eps_greedy_actions
+            action=eff_greedy_actions[i]
+        eps_greedy_safe_actions.append(action)
+    return eps_greedy_safe_actions
 
 def epsilon(curr_step,start=1,end=0.01,steady_step=300):
     if curr_step<steady_step:

@@ -1,48 +1,83 @@
-import time
 import numpy as np
 from gridenv import env
 from helper import *
 from tqdm import tqdm
+from PIL import Image
+import matplotlib.pyplot as plt
 
 
-#MC-Control
+#Safe MC-Control
 np.random.seed(42)
 
 Q_sa=np.zeros((env.state_count,env.action_size))
 N_sa=np.zeros((env.state_count,env.action_size))
+H_sa=np.ones((env.state_count,env.action_size))
 
 gamma=0.99
+beta=0.999
+unsafe_prob=0.1
 episodes=100000
-steady_explore_episode=20000
+steady_explore_episode=30000
 performance=[]
+risk=[]
 
 for episode in tqdm(range(episodes)):
     eps=epsilon(episode,start=1,end=0.01,steady_step=steady_explore_episode)
-    pi=eps_greedy_Q(eps,Q_sa,env.action_space)    
+    pi=eps_greedy_Qsafe(eps,Q_sa,H_sa,unsafe_prob,env.action_space)    
     
     tau,total_reward=sample_trajectory(env,pi,gamma)
     performance.append(total_reward)
     
     seen=[]
-    for s,a,r,G in tau:
+    for s,a,r,G,unsafe in tau:
         if (s,a) in seen:continue #first visit MC
         seen.append((s,a))
         
         N_sa[s,a]+=1
         Q_sa[s,a]+=(G-Q_sa[s,a])/(N_sa[s,a])
+        H_sa[s,a]=(beta*H_sa[s,a]+(1-beta)*unsafe)
 
-env.show(pi)
+    risk.append(H_sa[0].mean())
 
+#Greedy policy
+pi=eps_greedy_Qsafe(0,Q_sa,H_sa,unsafe_prob,env.action_space)
+image=Image.fromarray(env.getScreenshot(pi))
+image.save(f"./logs/safe_mc/pi_emerged.png")
+
+mean_perf=np.lib.stride_tricks.sliding_window_view(performance,500).mean(axis=1)
+std_perf=np.lib.stride_tricks.sliding_window_view(performance,500).std(axis=1)
+plt.plot(mean_perf)
+plt.fill_between(range(len(mean_perf)),mean_perf-std_perf,mean_perf+std_perf,alpha=0.3)
+plt.ylabel('Episode Reward',fontsize=16)
+plt.xlabel('Episodes',fontsize=16)
+plt.tight_layout()
+plt.savefig("./logs/safe_mc/reward.png")
+plt.close()
+
+plt.plot(risk)
+plt.ylabel('Risk (0)',fontsize=16)
+plt.xlabel('Episodes',fontsize=16)
+plt.tight_layout()
+plt.savefig("./logs/safe_mc/risk.png")
+plt.close()
+
+report=""
+pi_report=f"Pi= {pi}\n\nTest runs:"
+report+=pi_report+"\n"
+print(pi_report)
 for e in range(10):
     done=False
     total_reward=0
     s=env.reset()
     while not done:
         a=pi[s]
-        env.render()
+        #env.render()
         s_,r,done,info=env.step(a)
         total_reward+=r
         s=s_
-        time.sleep(0.1)
-    print(f"Episode {e} Total reward {total_reward}")
+    epi_report=f"Episode {e} Total reward {total_reward}"
+    report+=epi_report+"\n"
+    print(epi_report)
 env.close()
+
+with open("./logs/safe_mc/report.txt","w") as f:f.write(report)

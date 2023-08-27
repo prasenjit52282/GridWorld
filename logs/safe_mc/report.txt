@@ -1,0 +1,13 @@
+Pi= [0, 0, 1, 2, 2, 2, 0, 1, 2, 1, 0, 0, 1, 3, 0, 0, 0, 1, 1, 1, 0, 0, 1, 2, 3, 0, 1, 0, 0, 2, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 2, 2, 2, 2, 2, 2, 0, 0, 1, 3, 3, 2, 2, 2, 0, 0, 1, 1, 1, 0, 0, 0, 3, 3, 3, 2, 2, 1, 2, 0, 0, 2, 0, 1, 3, 0, 1, 0, 0, 2, 1, 3, 3, 2, 2, 2, 0, 0, 0, 0]
+
+Test runs:
+Episode 0 Total reward 79
+Episode 1 Total reward 73
+Episode 2 Total reward 73
+Episode 3 Total reward 70
+Episode 4 Total reward 71
+Episode 5 Total reward 78
+Episode 6 Total reward 83
+Episode 7 Total reward 61
+Episode 8 Total reward 65
+Episode 9 Total reward 81
