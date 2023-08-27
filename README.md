@@ -162,4 +162,4 @@ test.py
 ```
 
 # Contact Me
-I hope this tool is useful in your RL-journey. For questions and general feedback, contact [Prasenjit Karmakar](https://www.linkedin.com/in/prasenjit52282).
+This is Assignment 1 of CS60077: Reinforcement Learning course in IIT Kharagpur, taught by Dr. Aritra Hazra. I hope that the gridworld tool will be useful in your RL-journey. For questions and general feedback, contact [Prasenjit Karmakar](https://www.linkedin.com/in/prasenjit52282).
