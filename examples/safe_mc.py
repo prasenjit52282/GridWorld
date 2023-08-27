@@ -14,6 +14,7 @@ N_sa=np.zeros((env.state_count,env.action_size))
 H_sa=np.ones((env.state_count,env.action_size))
 
 gamma=0.99
+alpha=1e-4
 beta=0.999
 unsafe_prob=0.1
 episodes=100000
@@ -34,7 +35,7 @@ for episode in tqdm(range(episodes)):
         seen.append((s,a))
         
         N_sa[s,a]+=1
-        Q_sa[s,a]+=(G-Q_sa[s,a])/(N_sa[s,a])
+        Q_sa[s,a]+=alpha*(G-Q_sa[s,a])
         H_sa[s,a]=(beta*H_sa[s,a]+(1-beta)*unsafe)
 
     risk.append(H_sa[0].mean())
@@ -55,9 +56,11 @@ plt.savefig("./logs/safe_mc/reward.png")
 plt.close()
 
 plt.plot(risk)
+plt.yticks(np.arange(0,1.1,0.1))
 plt.ylabel('Risk (0)',fontsize=16)
 plt.xlabel('Episodes',fontsize=16)
 plt.tight_layout()
+plt.grid(axis='y')
 plt.savefig("./logs/safe_mc/risk.png")
 plt.close()
 
