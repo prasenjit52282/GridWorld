@@ -40,12 +40,12 @@ class GridWorld:
                     
                 elif block_type=='g':
                     self.goal=Goal(col=x,row=y)
-                    self.state_dict[(x,y)]={'state':i,'reward':10,'done':True}
+                    self.state_dict[(x,y)]={'state':i,'reward':100,'done':True}
                     i+=1
 
                 elif block_type=='o':
                     self.state_group.add(Hole(col=x,row=y))
-                    self.state_dict[(x,y)]={'state':i,'reward':-10,'done':True}
+                    self.state_dict[(x,y)]={'state':i,'reward':-100,'done':True,"hole":True}
                     i+=1
                 
                 elif block_type==' ':
@@ -83,7 +83,9 @@ class GridWorld:
         action=self.action_map[action]
         response=self.agent.move(action,self.wall_group,self.state_dict)
         self.episode_step+=1
-        if self.episode_step<=self._max_epi_step:
+        if "hole" in response:
+            return response['state'],response['reward'],response['done'],{"hole":True}
+        elif self.episode_step<=self._max_epi_step:
             return response['state'],response['reward'],response['done'],{}
         else:
             return response['state'],response['reward'],True,{'TimeLimit':True}
@@ -120,10 +122,8 @@ class GridWorld:
             s.default_state()
         
     def play_as_human(self,policy=None):
-        show_policy=False
         if policy is not None:
             self.__setPolicy(policy)
-            show_policy=True
 
         pg.init()
         screen = pg.display.set_mode((self.col*50,self.row*50))
@@ -155,6 +155,25 @@ class GridWorld:
             clock.tick(60)
         self.__unsetPolicy()
         pg.quit()
+
+    def getScreenshot(self,policy=None):
+        if policy is not None:
+            self.__setPolicy(policy)
+        pg.init()
+        screen = pg.display.set_mode((self.col*50,self.row*50))
+        screen.fill(self.state_color)
+
+        self.wall_group.draw(screen)  
+        self.state_group.draw(screen)
+        self.goal.draw(screen)    
+        self.agent.draw(screen)
+        
+        pg.display.update()
+        pg.display.flip()
+        image=pg.surfarray.array3d(screen).transpose(1,0,2)
+        self.__unsetPolicy()
+        pg.quit()
+        return image
 
     
     def show(self,policy):

@@ -31,7 +31,7 @@ world=\
     
 env=GridWorld(world,slip=0.2) # Slip is the degree of stochasticity of the gridworld.
 
-# Policy Iteratioin
+# Value Iteratioin
 V=np.zeros((env.state_count,1))
 V_prev=np.random.random((env.state_count,1))
 eps=1e-7
@@ -110,10 +110,35 @@ State Transitions are printed:
 ```
 <img src="./assets/modelFree.gif" width="60%"/>
 
+# Examples
+To elaborate the usage of the package, examples folder contains several classical Reinforcement Learning algorithms that is tested on this platform. The algorithms are as follow:
+
+* Policy Evaluation 
+    > ```python example/policy_eval.py```
+* Policy Iteration 
+    > ```python example/policy_itr.py```
+* Value Iteration 
+    > ```python example/value_itr.py```
+* Safe Monti-Carlo 
+    > ```python example/safe_mc.py```
+* Safe SARSA 
+    > ```python example/safe_sarsa.py```
+
+The underlined gridworld environment object is defined in "examples/gridenv.py", and the logs of each algorithm is getting stored in the "logs" folder.
+
 # File Structure
 If you want to have your own agent and goal along with differnt objects to represent the wall and normal states, you can change the respective images in "/gridworld/modules/images"
 ```
-- gridworld
+assets
+examples
+    └── gridenv.py
+    └── helper.py
+    └── policy_eval.py
+    └── policy_itr.py
+    └── value_itr.py
+    └── safe_mc.py
+    └── safe_sarsa.py
+gridworld
     └── modules
         └── images
             └── agent.png
@@ -127,12 +152,13 @@ If you want to have your own agent and goal along with differnt objects to repre
         └── wall.py
     └── __init__.py
     └── gridworld.py
-- requirements.txt
-- .gitignore
-- LICENSE
-- MANIFEST.in
-- setup.py
-- test.py
+logs
+requirements.txt
+.gitignore
+LICENSE
+MANIFEST.in
+setup.py
+test.py
 ```
 
 # Contact Me
