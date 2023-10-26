@@ -1,11 +1,11 @@
 import numpy as np
 import pygame as pg
 from collections import defaultdict
-from .modules import Agent, Wall, Goal, State, Hole
+from .modules import Agent, Wall, Goal, State, Hole, Block
 
 class GridWorld:
-    def __init__(self,world,slip=0.2,log=False,max_episode_step=1000):
-        
+    def __init__(self,world,slip=0.2,log=False,max_episode_step=1000,blocksize=(50,50)):
+        Block.setBlockSize(*blocksize)
         self.world=world.split('\n    ')[1:-1]
         self.action_map={0:'right',1:'down',2:'left',3:'up'}
         self.action_space=[0,1,2,3]
@@ -94,7 +94,7 @@ class GridWorld:
     def render(self):
         if self.renderfirst:
             pg.init()
-            self.screen = pg.display.set_mode((self.col*50,self.row*50))
+            self.screen = pg.display.set_mode((self.col*Block.sizeX,self.row*Block.sizeY))
             self.renderfirst=False
         self.screen.fill(self.state_color)
         self.wall_group.draw(self.screen) 
@@ -126,7 +126,7 @@ class GridWorld:
             self.__setPolicy(policy)
 
         pg.init()
-        screen = pg.display.set_mode((self.col*50,self.row*50))
+        screen = pg.display.set_mode((self.col*Block.sizeX,self.row*Block.sizeY))
         clock = pg.time.Clock()
         done = False
         while not done: 
@@ -160,7 +160,7 @@ class GridWorld:
         if policy is not None:
             self.__setPolicy(policy)
         pg.init()
-        screen = pg.display.set_mode((self.col*50,self.row*50))
+        screen = pg.display.set_mode((self.col*Block.sizeX,self.row*Block.sizeY))
         screen.fill(self.state_color)
 
         self.wall_group.draw(screen)  
