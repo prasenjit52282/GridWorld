@@ -24,6 +24,7 @@ class GridWorld:
         self.wall_group=pg.sprite.Group()
         self.state_group=pg.sprite.Group()
         self.state_dict=defaultdict(lambda :0)
+        self.goal_group=pg.sprite.Group()
 
         i=0
         for y,et_row in enumerate(self.world):
@@ -39,7 +40,7 @@ class GridWorld:
                     i+=1
                     
                 elif block_type=='g':
-                    self.goal=Goal(col=x,row=y)
+                    self.goal_group.add(Goal(col=x,row=y))
                     self.state_dict[(x,y)]={'state':i,'reward':100,'done':True}
                     i+=1
 
@@ -99,7 +100,7 @@ class GridWorld:
         self.screen.fill(self.state_color)
         self.wall_group.draw(self.screen) 
         self.state_group.draw(self.screen)
-        self.goal.draw(self.screen)    
+        self.goal_group.draw(self.screen)    
         self.agent.draw(self.screen)
         pg.display.update()
         pg.display.flip()
@@ -147,7 +148,7 @@ class GridWorld:
 
             self.wall_group.draw(screen)  
             self.state_group.draw(screen)
-            self.goal.draw(screen)    
+            self.goal_group.draw(screen)    
             self.agent.draw(screen)
             
             pg.display.update()
@@ -165,7 +166,7 @@ class GridWorld:
 
         self.wall_group.draw(screen)  
         self.state_group.draw(screen)
-        self.goal.draw(screen)    
+        self.goal_group.draw(screen)    
         self.agent.draw(screen)
         
         pg.display.update()
