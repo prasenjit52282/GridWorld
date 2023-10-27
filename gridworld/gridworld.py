@@ -4,8 +4,10 @@ from collections import defaultdict
 from .modules import Agent, Wall, Goal, State, Hole, Block
 
 class GridWorld:
-    def __init__(self,world,slip=0.2,log=False,max_episode_step=1000,blocksize=(50,50)):
+    def __init__(self,world,slip=0.2,log=False,max_episode_step=1000,blocksize=(50,50),isDRL=False,viewsize=10):
         Block.setBlockSize(*blocksize)
+        self.isDRL=isDRL
+        if self.isDRL:Block.setViewSize(viewsize)
         self.world=world.split('\n    ')[1:-1]
         self.action_map={0:'right',1:'down',2:'left',3:'up'}
         self.action_space=[0,1,2,3]
@@ -36,22 +38,22 @@ class GridWorld:
                 elif block_type=='a':
                     self.agent=Agent(col=x,row=y,log=self.logging)
                     self.state_group.add(State(col=x,row=y,color=self.state_color))
-                    self.state_dict[(x,y)]={'state':i,'reward':-1,'done':False}
+                    self.state_dict[(x,y)]={'state':i,'reward':-1,'done':False,'type':'norm'}
                     i+=1
                     
                 elif block_type=='g':
                     self.goal_group.add(Goal(col=x,row=y))
-                    self.state_dict[(x,y)]={'state':i,'reward':100,'done':True}
+                    self.state_dict[(x,y)]={'state':i,'reward':100,'done':True,'type':'goal'}
                     i+=1
 
                 elif block_type=='o':
                     self.state_group.add(Hole(col=x,row=y))
-                    self.state_dict[(x,y)]={'state':i,'reward':-100,'done':True,"hole":True}
+                    self.state_dict[(x,y)]={'state':i,'reward':-100,'done':True,"hole":True,'type':'hole'}
                     i+=1
                 
                 elif block_type==' ':
                     self.state_group.add(State(col=x,row=y,color=self.state_color))
-                    self.state_dict[(x,y)]={'state':i,'reward':-1,'done':False}
+                    self.state_dict[(x,y)]={'state':i,'reward':-1,'done':False,'type':'norm'}
                     i+=1
                     
         self.state_dict=dict(self.state_dict)
@@ -62,12 +64,19 @@ class GridWorld:
 
     def random_action(self):
         return np.random.choice(self.action_space)
+
+
+    def formatState(self,response_state):
+        if self.isDRL:
+            return self.agent.getViewState(self.state_dict)
+        else:
+            return response_state
     
 
     def reset(self):
         self.episode_step=0
         self.agent.reInitilizeAgent()
-        return self.state_dict[(self.agent.initial_position.x,self.agent.initial_position.y)]['state']
+        return self.formatState(self.state_dict[(self.agent.initial_position.x,self.agent.initial_position.y)]['state'])
     
 
     def get_action_with_probof_slip(self,action):
@@ -76,7 +85,7 @@ class GridWorld:
         prob[action]=1-self.slip
         act=np.random.choice(self.action_space,p=prob)
         return act
-        
+
     
     def step(self,action,testing=False):
         if not testing:
@@ -85,11 +94,11 @@ class GridWorld:
         response=self.agent.move(action,self.wall_group,self.state_dict)
         self.episode_step+=1
         if "hole" in response:
-            return response['state'],response['reward'],response['done'],{"hole":True}
+            return self.formatState(response['state']),response['reward'],response['done'],{"hole":True}
         elif self.episode_step<=self._max_epi_step:
-            return response['state'],response['reward'],response['done'],{}
+            return self.formatState(response['state']),response['reward'],response['done'],{}
         else:
-            return response['state'],response['reward'],True,{'TimeLimit':True}
+            return self.formatState(response['state']),response['reward'],True,{'TimeLimit':True}
     
 
     def render(self):
@@ -143,6 +152,7 @@ class GridWorld:
                             response=self.agent.move('up',self.wall_group,self.state_dict)
                         elif event.key == pg.K_DOWN:
                             response=self.agent.move('down',self.wall_group,self.state_dict)
+                        if self.isDRL:self.formatState(response['state'])
 
             screen.fill(self.state_color)
 
