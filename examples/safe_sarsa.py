@@ -1,7 +1,7 @@
 import numpy as np
 from tqdm import tqdm
-from gridenv import env
-from helper import *
+from library.gridenv import env
+from library.helper import *
 from PIL import Image
 import matplotlib.pyplot as plt
 
