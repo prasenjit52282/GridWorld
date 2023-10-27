@@ -114,15 +114,15 @@ State Transitions are printed:
 To elaborate the usage of the package, examples folder contains several classical Reinforcement Learning algorithms that is tested on this platform. The algorithms are as follow:
 
 * Policy Evaluation 
-    > ```python example/policy_eval.py```
+    > ```python examples/policy_eval.py```
 * Policy Iteration 
-    > ```python example/policy_itr.py```
+    > ```python examples/policy_itr.py```
 * Value Iteration 
-    > ```python example/value_itr.py```
+    > ```python examples/value_itr.py```
 * Safe Monti-Carlo 
-    > ```python example/safe_mc.py```
+    > ```python examples/safe_mc.py```
 * Safe SARSA 
-    > ```python example/safe_sarsa.py```
+    > ```python examples/safe_sarsa.py```
 
 The underlined gridworld environment object is defined in "examples/gridenv.py", and the logs of each algorithm is getting stored in the "logs" folder.
 
