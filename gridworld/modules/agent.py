@@ -50,7 +50,7 @@ class Agent(pg.sprite.Sprite):
         
     def getViewState(self,state_dict):
         hh,hw=Block.getViewSize()
-        s=np.full((2*hh+1,2*hw+1),fill_value=self.get_state_symbol('unknown'))
+        s=np.full((2*hh+1,2*hw+1),fill_value=self.get_state_symbol('unknown'),dtype='int8')
         s[hh-0,hw-0]=self.get_state_symbol("agent")
         for spread in range(1,hh+1):
             dir=list(product([-spread,spread],range(-spread,spread+1)))+list(product(range(-(spread-1),spread),[-spread,spread]))

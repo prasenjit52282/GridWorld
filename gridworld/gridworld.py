@@ -1,17 +1,23 @@
+import gym
 import numpy as np
 import pygame as pg
+from gym.spaces import Box,Discrete
 from collections import defaultdict
 from .modules import Agent, Wall, Goal, State, Hole, Block
 
-class GridWorld:
-    def __init__(self,world,slip=0.2,log=False,max_episode_step=1000,blocksize=(50,50),isDRL=False,viewsize=10):
+class GridWorld(gym.Env):
+    def __init__(self,world,slip=0.2,log=False,max_episode_step=1000,blocksize=(50,50),isDRL=False,viewsize=10,random_state=None):
+        super().__init__()
         Block.setBlockSize(*blocksize)
         self.isDRL=isDRL
         if self.isDRL:Block.setViewSize(viewsize)
+        self.seed=random_state
+        np.random.seed(random_state)
+
         self.world=world.split('\n    ')[1:-1]
         self.action_map={0:'right',1:'down',2:'left',3:'up'}
-        self.action_space=[0,1,2,3]
-        self.action_size=len(self.action_space)
+        self.action_values=[0,1,2,3]
+        self.action_size=len(self.action_values)
         self.slip=slip
         self.logging=log
        
@@ -58,12 +64,19 @@ class GridWorld:
                     
         self.state_dict=dict(self.state_dict)
         self.state_count=len(self.state_dict)
+        #setting action and observation space
+        self.action_space=Discrete(self.action_size)
+        if self.isDRL:
+            self.observation_space=Box(low=-2,high=2,shape=(2*viewsize+1,2*viewsize+1),dtype='int8')
+        else:
+            self.observation_space=Discrete(self.state_count)
+        #building environment model
         self.P_sas, self.R_sa=self.build_Model(self.slip)
         self.reset()
 
 
     def random_action(self):
-        return np.random.choice(self.action_space)
+        return np.random.choice(self.action_values)
 
 
     def formatState(self,response_state):
@@ -81,9 +94,9 @@ class GridWorld:
 
     def get_action_with_probof_slip(self,action):
         individual_slip=self.slip/3
-        prob=[individual_slip for a in self.action_space]
+        prob=[individual_slip for a in self.action_values]
         prob[action]=1-self.slip
-        act=np.random.choice(self.action_space,p=prob)
+        act=np.random.choice(self.action_values,p=prob)
         return act
 
     
@@ -196,7 +209,7 @@ class GridWorld:
         R_sas=np.zeros((self.state_count,self.action_size,self.state_count),dtype="float32")
 
         for (col,row), curr_state in self.state_dict.items():
-            for act in self.action_space:
+            for act in self.action_values:
                 action=self.action_map[act]
                 self.agent.setLoc(col,row)
                 next_state=self.agent.move(action,self.wall_group,self.state_dict)
@@ -205,8 +218,8 @@ class GridWorld:
 
         correct=1-slip
         ind_slip=slip/3
-        for a in self.action_space:
-            other_actions=[oa for oa in self.action_space if oa!=a]
+        for a in self.action_values:
+            other_actions=[oa for oa in self.action_values if oa!=a]
             P_sas[:,a,:]=(P_sas[:,a,:]*correct)+(P_sas[:,other_actions,:].sum(axis=1)*ind_slip)
 
         R_sa=np.multiply(P_sas,R_sas).sum(axis=2)

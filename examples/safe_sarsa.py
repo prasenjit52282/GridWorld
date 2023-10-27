@@ -10,7 +10,7 @@ np.random.seed(42)
 
 Q_sa=np.zeros((env.state_count,env.action_size))
 H_sa=np.ones((env.state_count,env.action_size))
-pi=np.random.choice(env.action_space,size=env.state_count) #random policy
+pi=np.random.choice(env.action_values,size=env.state_count) #random policy
 
 gamma=0.99
 gamma_risk=0.66 # 3 furure states
@@ -35,7 +35,7 @@ for step in tqdm(range(train_steps)):
     else:
         H_sa[s,a]+=alpha*((0+gamma_risk*H_sa[s_p].max())-H_sa[s,a])
     eps=epsilon(step,start=1,end=0.01,steady_step=steady_explore_step)
-    pi[s]=online_safe_eps_greedy(eps,Q_sa[s],H_sa[s],unsafe_prob,env.action_space)
+    pi[s]=online_safe_eps_greedy(eps,Q_sa[s],H_sa[s],unsafe_prob,env.action_values)
     s=s_p
     if done:
         performance.append(total_reward)
@@ -45,7 +45,7 @@ for step in tqdm(range(train_steps)):
         total_reward=0
 
 #Greedy policy
-pi=eps_greedy_Qsafe(0,Q_sa,H_sa,unsafe_prob,env.action_space)
+pi=eps_greedy_Qsafe(0,Q_sa,H_sa,unsafe_prob,env.action_values)
 image=Image.fromarray(env.getScreenshot(pi))
 image.save(f"./logs/safe_sarsa/pi_emerged.png")
 

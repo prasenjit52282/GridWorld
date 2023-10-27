@@ -9,8 +9,8 @@ gamma=0.9
 
 #Policy Iteration
 V=np.zeros((env.state_count,1))
-pi=np.random.choice(env.action_space,size=env.state_count) #random policy
-pi_prev=np.random.choice(env.action_space,size=env.state_count)
+pi=np.random.choice(env.action_values,size=env.state_count) #random policy
+pi_prev=np.random.choice(env.action_values,size=env.state_count)
 
 i=0
 v_values=[]

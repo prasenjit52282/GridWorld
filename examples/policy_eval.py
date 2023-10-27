@@ -5,7 +5,7 @@ from helper import inf_norm,getMRP
 from PIL import Image
 
 np.random.seed(42)
-pi=np.random.choice(env.action_space,size=env.state_count) #random policy
+pi=np.random.choice(env.action_values,size=env.state_count) #random policy
 image=Image.fromarray(env.getScreenshot(pi))
 image.save(f"./logs/policy_eval/pi_selected.png")
 

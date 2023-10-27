@@ -23,7 +23,7 @@ risk=[]
 
 for episode in tqdm(range(episodes)):
     eps=epsilon(episode,start=1,end=0.01,steady_step=steady_explore_episode)
-    pi=eps_greedy_Qsafe(eps,Q_sa,H_sa,unsafe_prob,env.action_space)    
+    pi=eps_greedy_Qsafe(eps,Q_sa,H_sa,unsafe_prob,env.action_values)    
     
     tau,total_reward=sample_trajectory(env,pi,gamma)
     performance.append(total_reward)
@@ -39,7 +39,7 @@ for episode in tqdm(range(episodes)):
     risk.append(H_sa[0].mean())
 
 #Greedy policy
-pi=eps_greedy_Qsafe(0,Q_sa,H_sa,unsafe_prob,env.action_space)
+pi=eps_greedy_Qsafe(0,Q_sa,H_sa,unsafe_prob,env.action_values)
 image=Image.fromarray(env.getScreenshot(pi))
 image.save(f"./logs/safe_mc/pi_emerged.png")
 
