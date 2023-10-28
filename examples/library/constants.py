@@ -6,15 +6,15 @@ H=[100,100]
 
 #DQN
 experiment="DQN" #DQN
-memory_size=100000
+memory_size=300000
 gamma=0.99
 num_collection_steps=50000
 num_training_steps=1000000
 steady_epsilon=0.01
-exploration_steps=200000
+exploration_steps=300000
 fixedQ_update_steps=10000
 learning_steps=4
-batch_size=32
+batch_size=256
 
 #Testing
 test_after_episode=50
