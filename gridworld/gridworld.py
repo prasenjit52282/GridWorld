@@ -1,6 +1,7 @@
 import gym
 import numpy as np
 import pygame as pg
+from collections import deque
 from gym.spaces import Box,Discrete
 from collections import defaultdict
 from .modules import Agent, Wall, Goal, State, Hole, Block
@@ -224,3 +225,39 @@ class GridWorld(gym.Env):
 
         R_sa=np.multiply(P_sas,R_sas).sum(axis=2)
         return P_sas,R_sa
+
+
+class ractGridWorld(gym.Env):
+    def __init__(self,world,slip=0.2,log=False,max_episode_step=1000,blocksize=(50,50),isDRL=False,viewsize=10,random_state=None,repeat_act=4):
+        super().__init__()
+        self.repeat_act=repeat_act
+        self.state=deque([],maxlen=repeat_act)
+        self.env=GridWorld(world,slip,log,max_episode_step,blocksize,isDRL,viewsize,random_state)
+        self.observation_space=Box(low=self.env.observation_space.low.min(),high=self.env.observation_space.high.max(),
+        shape=(self.env.observation_space.shape[0]*repeat_act,),dtype='int8')
+        self.action_space=self.env.action_space
+    
+    def get_state(self):
+        return np.array(self.state,dtype='int8').flatten()
+
+    def reset(self):
+        s=self.env.reset()
+        for i in range(self.repeat_act):
+            self.state.append(s)
+        return self.get_state()
+    
+    def step(self,action,testing=False):
+        rewd=0
+        for i in range(self.repeat_act):
+            s,r,done,info=self.env.step(action,testing)
+            self.state.append(s)
+            rewd+=r
+            if done:
+                break
+        return self.get_state(),rewd,done,info
+
+    def render(self):
+        self.env.render()
+
+    def close(self):
+        self.env.close()

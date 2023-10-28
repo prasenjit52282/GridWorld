@@ -4,7 +4,7 @@ from tqdm import tqdm
 from library.dqnalgo import dqn
 from library.constants import *
 from library.logger import TensorboardLogger
-from library.gridenv import make_env,dqn_test,big_env_fn
+from library.gridenv import make_env,dqn_test,big_renv_fn
 
 # Instantiate the parser
 parser = argparse.ArgumentParser(description='Training for different setting with DQN')
@@ -17,7 +17,7 @@ parser.add_argument('--log_loc', type=str, default="./logs/dqn/", help='Require 
 args = parser.parse_args()
 
 
-env=make_env(big_env_fn,args.random_state)()
+env=make_env(big_renv_fn,args.random_state)()
 agent=dqn(input_size=env.observation_space.shape[0],action_size=env.action_space.n,memory_size=memory_size,
           gamma=gamma,exp_name=args.exp_name,init_from_exp=args.init_from_exp,seed=args.random_state)
 logger=TensorboardLogger(loc=args.log_loc,experiment=args.exp_name)
