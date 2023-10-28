@@ -1,12 +1,13 @@
 import numpy as np
 from tqdm import tqdm
-from library.gridenv import env
+from library.gridenv import small_env_fn
 from library.helper import *
 from PIL import Image
 import matplotlib.pyplot as plt
 
 #Safe SARSA
 np.random.seed(42)
+env=small_env_fn(42)
 
 Q_sa=np.zeros((env.state_count,env.action_size))
 H_sa=np.ones((env.state_count,env.action_size))

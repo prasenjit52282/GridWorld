@@ -67,7 +67,7 @@ class GridWorld(gym.Env):
         #setting action and observation space
         self.action_space=Discrete(self.action_size)
         if self.isDRL:
-            self.observation_space=Box(low=-2,high=2,shape=(2*viewsize+1,2*viewsize+1),dtype='int8')
+            self.observation_space=Box(low=-2,high=2,shape=((2*viewsize+1)*(2*viewsize+1),),dtype='int8')
         else:
             self.observation_space=Discrete(self.state_count)
         #building environment model
@@ -81,7 +81,7 @@ class GridWorld(gym.Env):
 
     def formatState(self,response_state):
         if self.isDRL:
-            return self.agent.getViewState(self.state_dict)
+            return self.agent.getViewState(self.state_dict).flatten()
         else:
             return response_state
     
