@@ -89,22 +89,3 @@ def dqn_test(test_env,num=1,steady_eps=None,agent=None,render=False):
     test_env.close()
     avg_rewd=cum_rewd/num
     return {"avg_reward":avg_rewd}
-
-def ppo_test(test_env,num=10,agent=None,render=False):
-    cum_rewd=0
-    for _ in range(num):
-        done=False
-        rewd=0
-        curr_state=test_env.reset()
-        while not done:
-            if render:
-                test_env.render()
-                time.sleep(0.02)
-            act,_=agent.predict(curr_state)
-            next_state,r,done,info=test_env.step(act)
-            curr_state=next_state
-            rewd+=r
-        cum_rewd+=rewd
-    test_env.close()
-    avg_rewd=cum_rewd/num
-    return {"avg_reward":avg_rewd}
