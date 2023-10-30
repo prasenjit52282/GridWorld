@@ -41,7 +41,8 @@ if __name__ == '__main__':
 			max_grad_norm=max_grad_norm,
 			cliprange=cliprange,
 			cliprange_vf=cliprange_vf,
-			log_loc=args.log_loc)
+			log_loc=args.log_loc,
+			only_test=args.test)
 
 	if not args.test:
 		ppo.learn(train_for_step=train_for_step,test_at_iter=test_at_iter,num_of_test=num_of_test)

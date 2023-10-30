@@ -22,7 +22,8 @@ class PPO2:
 				 max_grad_norm=0.5,
 				 cliprange=0.2,
 				 cliprange_vf=None,
-				 log_loc=None
+				 log_loc=None,
+				 only_test=False
 				 ):
 
 		self.envs=envs
@@ -46,7 +47,8 @@ class PPO2:
 		self.cliprange_vf=cliprange_vf
 
 		self.optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=self.learning_rate)
-		self.logger=TensorboardLogger(loc=log_loc,experiment="PPO")
+		if only_test:self.logger=None
+		else:self.logger=TensorboardLogger(loc=log_loc,experiment="PPO")
 
 	def policy_loss(self,new_log_probs,old_log_probs,adv):
 		r=tf.math.exp(tf.math.subtract(new_log_probs, old_log_probs))
