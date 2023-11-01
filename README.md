@@ -8,6 +8,7 @@ To install the package in your python(>=3.9) environment you need to run the bel
 ```bash
 git clone https://github.com/prasenjit52282/GridWorld.git
 cd GridWorld
+pip install -r Requirements.txt
 python setup.py install
 ```
 
@@ -111,7 +112,7 @@ State Transitions are printed:
 <img src="./assets/modelFree.gif" width="60%"/>
 
 # Examples
-To elaborate the usage of the package, examples folder contains several classical Reinforcement Learning algorithms that is tested on this platform. The algorithms are as follow:
+To elaborate the usage of the package, examples folder contains several classical and Deep Reinforcement Learning algorithms that is tested on this platform. The algorithms are as follow:
 
 * Policy Evaluation 
     > ```python examples/policy_eval.py```
@@ -123,6 +124,14 @@ To elaborate the usage of the package, examples folder contains several classica
     > ```python examples/safe_mc.py```
 * Safe SARSA 
     > ```python examples/safe_sarsa.py```
+* Deep Q Network
+    > ```python examples/dqn.py```
+* Natural Policy Gradient
+    > ```python examples/npg.py```
+* Trust Region Policy Optimization 
+    > ```python examples/trpo.py```
+* Proximal Policy Optimization
+    > ```python examples/ppo.py```
 
 The underlined gridworld environment object is defined in "examples/gridenv.py", and the logs of each algorithm is getting stored in the "logs" folder.
 
@@ -138,6 +147,10 @@ examples
     └── value_itr.py
     └── safe_mc.py
     └── safe_sarsa.py
+    └── dqn.py
+    └── npg.py
+    └── trpo.py
+    └── ppo.py
 gridworld
     └── modules
         └── images
@@ -162,4 +175,4 @@ test.py
 ```
 
 # Contact Me
-This is Assignment 1 of CS60077: Reinforcement Learning course in IIT Kharagpur, taught by Dr. Aritra Hazra. I hope that the gridworld tool will be useful in your RL-journey. For questions and general feedback, contact [Prasenjit Karmakar](https://www.linkedin.com/in/prasenjit52282).
+This is Assignment I & II of CS60077: Reinforcement Learning course in IIT Kharagpur, taught by Dr. Aritra Hazra. I hope that the gridworld tool will be useful in your RL-journey. For questions and general feedback, contact [Prasenjit Karmakar](https://www.linkedin.com/in/prasenjit52282).
