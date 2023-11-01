@@ -1,16 +1,17 @@
 import numpy as np
-from gridenv import env
+from library.gridenv import small_env_fn
 import matplotlib.pyplot as plt
-from helper import inf_norm,getMRP
+from library.helper import inf_norm,getMRP
 from PIL import Image
 
 np.random.seed(42)
+env=small_env_fn(42)
 gamma=0.9
 
 #Policy Iteration
 V=np.zeros((env.state_count,1))
-pi=np.random.choice(env.action_space,size=env.state_count) #random policy
-pi_prev=np.random.choice(env.action_space,size=env.state_count)
+pi=np.random.choice(env.action_values,size=env.state_count) #random policy
+pi_prev=np.random.choice(env.action_values,size=env.state_count)
 
 i=0
 v_values=[]

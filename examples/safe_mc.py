@@ -1,6 +1,6 @@
 import numpy as np
-from gridenv import env
-from helper import *
+from library.gridenv import small_env_fn
+from library.helper import *
 from tqdm import tqdm
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 #Safe MC-Control
 np.random.seed(42)
+env=small_env_fn(42)
 
 Q_sa=np.zeros((env.state_count,env.action_size))
 H_sa=np.ones((env.state_count,env.action_size))
@@ -23,7 +24,7 @@ risk=[]
 
 for episode in tqdm(range(episodes)):
     eps=epsilon(episode,start=1,end=0.01,steady_step=steady_explore_episode)
-    pi=eps_greedy_Qsafe(eps,Q_sa,H_sa,unsafe_prob,env.action_space)    
+    pi=eps_greedy_Qsafe(eps,Q_sa,H_sa,unsafe_prob,env.action_values)    
     
     tau,total_reward=sample_trajectory(env,pi,gamma)
     performance.append(total_reward)
@@ -39,7 +40,7 @@ for episode in tqdm(range(episodes)):
     risk.append(H_sa[0].mean())
 
 #Greedy policy
-pi=eps_greedy_Qsafe(0,Q_sa,H_sa,unsafe_prob,env.action_space)
+pi=eps_greedy_Qsafe(0,Q_sa,H_sa,unsafe_prob,env.action_values)
 image=Image.fromarray(env.getScreenshot(pi))
 image.save(f"./logs/safe_mc/pi_emerged.png")
 

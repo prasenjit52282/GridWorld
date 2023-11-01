@@ -1,11 +1,12 @@
 import numpy as np
-from gridenv import env
+from library.gridenv import small_env_fn
 import matplotlib.pyplot as plt
-from helper import inf_norm,getMRP
+from library.helper import inf_norm,getMRP
 from PIL import Image
 
 np.random.seed(42)
-pi=np.random.choice(env.action_space,size=env.state_count) #random policy
+env=small_env_fn(42)
+pi=np.random.choice(env.action_values,size=env.state_count) #random policy
 image=Image.fromarray(env.getScreenshot(pi))
 image.save(f"./logs/policy_eval/pi_selected.png")
 

@@ -1,10 +1,11 @@
 import numpy as np
-from gridenv import env
+from library.gridenv import small_env_fn
 import matplotlib.pyplot as plt
-from helper import inf_norm
+from library.helper import inf_norm
 from PIL import Image
 
 np.random.seed(42)
+env=small_env_fn(42)
 gamma=0.9
 
 #Value Iteration
