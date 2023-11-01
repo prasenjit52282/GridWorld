@@ -1,5 +1,6 @@
 import numpy as np
 from .constants import H
+from .helper import assign_vars
 import tensorflow as tf
 import tensorflow_probability as tfp
 from tensorflow import multiply,random
@@ -123,6 +124,25 @@ class ActorCritic(Q_network):
 		#log_prob(s,a),v(s),entropy(s) --withgrad
 		return tf.reshape(dist.log_prob(a),shape=(-1,1)),val,dist.entropy()
 
+	def log_prob_entropy(self,s,a):
+		dist=self.actor_head(s)
+		val=self.critic_head(s)
+		#log_prob(s,a),entropy(s) --withgrad
+		return tf.reshape(dist.log_prob(a),shape=(-1,1)),dist.entropy()
+
+	def log_prob(self,s,a):
+		dist=self.actor_head(s)
+		#log_prob(s,a)
+		return tf.reshape(dist.log_prob(a),shape=(-1,1))
+
+	def value_with_grad(self,s):
+		val=self.critic_head(s)
+		#v(s),entropy(s) --withgrad
+		return val
+
+	def assign_theta(self,theta):
+		assign_vars(self.logits,theta)
+
 	def value(self,s):
 		val=self.critic_head(s)
 		return val.numpy()
@@ -132,7 +152,7 @@ class ActorCritic(Q_network):
 		return tf.math.argmax(logits,axis=1).numpy()[0]
 
 	def load_ppoModel(self,init_from_exp):
-		return load_model(f"./model/{init_from_exp}_ppo.h5")
+		return load_model(f"./model/{init_from_exp}_ac.h5")
 
 	def save_ppoModel(self):
-		self.logits.save(f"./model/{self.exp_name}_ppo.h5")
+		self.logits.save(f"./model/{self.exp_name}_ac.h5")

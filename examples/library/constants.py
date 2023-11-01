@@ -40,3 +40,18 @@ train_for_step=10000000 #10M
 #Testing PPO
 test_at_iter=5
 num_of_test=10
+
+
+#TRPO
+num_of_env_trpo=4
+n_steps_trpo=2048
+epochs_trpo=1
+steps_per_epoch_trpo=4
+shuffle_buffer_size_trpo=2048
+value_lr=1e-1
+delta = 0.01
+cg_damping=0.001 
+cg_iters=10 
+residual_tol=1e-5 
+backtrack_coef=0.9 
+backtrack_iters=10

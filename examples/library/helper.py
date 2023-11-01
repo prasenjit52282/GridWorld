@@ -1,6 +1,8 @@
 import numpy as np
 import functools
 import operator
+import tensorflow as tf
+
 
 def inf_norm(vec):
     return np.max(np.abs(vec))
@@ -90,4 +92,64 @@ def functools_reduce_iconcat(a):
 def normalize(x):
     x -= x.mean()
     x /= (x.std() + 1e-8)
+    return x
+
+
+def conjugate_grad(Ax, b,cg_iters=10,residual_tol=1e-5,params=None):
+    x = np.zeros_like(b)
+    r = b.copy()
+    p = r.copy()
+    old_p = p.copy()
+    r_dot_old = np.dot(r,r)
+    for _ in range(cg_iters):
+        z = Ax(p,params)
+        alpha = r_dot_old / (np.dot(p, z) + 1e-8)
+        old_x = x
+        x += alpha * p
+        r -= alpha * z
+        r_dot_new = np.dot(r,r)
+        beta = r_dot_new / (r_dot_old + 1e-8)
+        r_dot_old = r_dot_new
+        if r_dot_old < residual_tol:
+            break
+        old_p = p.copy()
+        p = r + beta * p
+    return x
+
+
+def flatgrad(loss_fn,params,var_list):
+    with tf.GradientTape() as t:
+        loss = loss_fn(*params)
+    grads = t.gradient(loss, var_list, unconnected_gradients=tf.UnconnectedGradients.ZERO)
+    return tf.concat([tf.reshape(g, [-1]) for g in grads], axis=0)
+
+
+def assign_vars(model, theta):
+    shapes = [v.shape.as_list() for v in model.trainable_variables]	
+    size_theta = np.sum([np.prod(shape) for shape in shapes])
+    start = 0
+    for i, shape in enumerate(shapes):
+        size = np.prod(shape)
+        param = tf.reshape(theta[start:start + size], shape)
+        model.trainable_variables[i].assign(param)
+        start += size
+
+
+def flatvars(model):
+	return tf.concat([tf.reshape(v, [-1]) for v in model.trainable_variables], axis=0)
+
+
+def linesearch(x, fullstep,temp_model,states,actions,old_log_probs,adv,surrogate_loss,kl_fn,backtrack_coeff=0.9,backtrack_iters=10,delta=0.01,log=False):
+    temp_model.assign_theta(x)
+    fval=surrogate_loss(temp_model,states,actions,old_log_probs,adv).numpy()
+    for (_n_backtracks,stepfrac) in enumerate(backtrack_coeff**np.arange(backtrack_iters)):
+        xnew = x + stepfrac * fullstep
+        temp_model.assign_theta(xnew)
+        newfval = surrogate_loss(temp_model,states,actions,old_log_probs,adv).numpy()
+        kl_div = kl_fn(temp_model,states,actions,old_log_probs).numpy()
+        if kl_div <= delta and newfval-fval >= 0:
+            if log:
+                print(kl_div,newfval-fval)
+                print("Linesearch worked at ", _n_backtracks)
+            return xnew
     return x
