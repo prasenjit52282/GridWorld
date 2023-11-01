@@ -55,3 +55,6 @@ cg_iters=10
 residual_tol=1e-5 
 backtrack_coef=0.9 
 backtrack_iters=10
+
+#NPG
+backtrack_iters_npg=1
