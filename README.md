@@ -133,6 +133,13 @@ To elaborate the usage of the package, examples folder contains several classica
 * Proximal Policy Optimization
     > ```python examples/ppo.py```
 
+# Testing DRL algorithms
+To test any of the above DRL algorithms in the gridworld environment use the following code
+```bash
+python examples/[algo_name].py --init_from_exp [ALGO_NAME] --test --render
+# example: python examples/ppo.py --init_from_exp PPO --test --render
+```
+
 The underlined gridworld environment object is defined in "examples/gridenv.py", and the logs of each algorithm is getting stored in the "logs" folder.
 
 # File Structure
