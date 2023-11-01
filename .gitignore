@@ -5,4 +5,3 @@ build
 dist
 *.egg-info
 /**/.DS_Store
-logs/trpo
